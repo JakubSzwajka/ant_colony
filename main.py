@@ -1,5 +1,7 @@
 import utils 
 import numpy
+import city
+import route
 from ant import Ant
 
 # punkt startowy ze wzgledu na numer indeksu 3 – B
@@ -10,49 +12,62 @@ C = [3,6]
 D = [6,7]
 E = [5,2]
 
-nodes = [[1,2],[3,1],[3,6],[6,7],[5,2]]
+# nodes = [[1,2],[3,1],[3,6],[6,7],[5,2]]
+nodes = [A,B,C,D,E]
 
-alfa = 1 
+alpha = 1 
 beta = 1 
 transition_probabilities=[]
 tau = []
+eta = []
 ants = []
+cities = []
+numerator = 1
 
+for node in nodes:
+    cities.append( city.City(numerator , node[0], node[1] ))
+    numerator += 1
 
-for city in nodes:
-    for city2 in nodes:
-        if city != city2:        
-            single_route = [city , city2]
-            if single_route not in tau:
-                single_route[0], single_route[1] = single_route[1] , single_route[0]
-                if single_route not in tau:
-                    tau.append(single_route)
+# for city in cities:
+#     print(city.index , city.x , city.y )
 
-print("===============================")
+for city in cities: 
+    city.add_cities( cities )
 
-for city in tau:
-    print (city)
+# for city in cities:
+#     print(city.my_cities)
 
+# for city in cities:
+#     for city2 in cities:
+#         if city != city2:        
+#             single_route = route.Route(city.index, city2.index)#[city.index , city2.index]
+#             if single_route not in tau:
+#                 single_route.cityA, single_route.cityB = single_route.cityB , single_route.cityA
+#                 if single_route not in tau:
+#                     tau.append(single_route)
 
+print("========================================================")
 
+for route in tau:
+    print (route.cityA , route.cityB)
 
-
-
-for i in range(10):
-    ants.append( Ant( nodes ))
-
+for i in range(1):
+    ants.append( Ant( cities ))
 
 for ant in ants:
-    current_city = ant.current_location
+    ant.run()
+
+# for ant in ants:
+#     current_city = ant.current_location
     
-    for city in ant.route:
-        denominator = 0
-        numerator = (pow(tau[current_city][city],alpha)*(eta[current_city][city], beta))
-        for city in ant.route:
-            denominator += (pow(tau[current_city][city],alpha)*(eta[current_city][city], beta))
+#     for city in ant.route:
+#         denominator = 0
+#         numerator = (pow(tau[current_city][city],alpha)*(eta[current_city][city], beta))
+#         for city in ant.route:
+#             denominator += (pow(tau[current_city][city],alpha)*(eta[current_city][city], beta))
         
-        p_ij = numerator/float(denominator)
-        transition_probabilities.append(p_ij)
+#         p_ij = numerator/float(denominator)
+#         transition_probabilities.append(p_ij)
     
-    next_city = numpy.random.choice(ant.route, 1, transition_probabilities)  
-    print(next_city)
+#     next_city = numpy.random.choice(ant.route, 1, transition_probabilities)  
+#     print(next_city)
