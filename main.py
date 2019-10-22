@@ -17,7 +17,6 @@ nodes = [A,B,C,D,E]
 
 alpha = 1 
 beta = 1 
-transition_probabilities=[]
 tau = []
 eta = []
 ants = []
@@ -51,11 +50,17 @@ print("========================================================")
 for route in tau:
     print (route.cityA , route.cityB)
 
-for i in range(1):
+for i in range(5):
     ants.append( Ant( cities ))
 
+
 for ant in ants:
+    ant.set_cities(cities)
     ant.run()
+    cities = ant.return_cities()
+    print( ant.distance_travelled )
+
+
 
 # for ant in ants:
 #     current_city = ant.current_location

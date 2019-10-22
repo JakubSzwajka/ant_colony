@@ -1,7 +1,8 @@
 
 import utils
 import random
-# import numpy as np
+import city
+import numpy
 
 class Ant( ):
     def __init__ (self, nodes):
@@ -11,39 +12,57 @@ class Ant( ):
         self.route = nodes
         self.current_location = self.route[0]
         self.next_location = self.route[0]
+        self.alpha = 1 
+        self.beta = 1 
+        self.transition_probabilities=[]
         
     def run(self):
         self.not_visited_locations = self.route
         # print( self.not_visited_locations )
 
-        while self.not_visited_locations:
-           # while set(self.next_location) & set(self.current_location):
+        # while len(self.not_visited_locations) > 1:
+        for i in range(len(self.route)): 
             self.next_location = self.find_path( )
-            if self.current_location != self.next_location or len(self.not_visited_locations) == 1 :
-                self.go_to(self.current_location , self.next_location)
-
-        self.all_loc_visited = True        
-        print( "distance travelled" , self.distance_travelled )
+            if self.current_location != self.next_location:
+                self.go_to(self.current_location , self.next_location)  
+        # print( "distance travelled" , self.distance_travelled )
 
 
     def find_path(self):
-        return random.choice( self.not_visited_locations)
-
+        for city in self.route:
+            denominator = 0
+            numerator = (pow(utils.sum_pheromone(self.route, self.current_location , city), self.alpha)* (pow(1/utils.count_distance(self.current_location , city), self.beta)))
+            for city in self.route:
+                denominator += (pow(utils.sum_pheromone(self.route, self.current_location , city), self.alpha)* (pow(1/utils.count_distance(self.current_location , city), self.beta)))
+           
+            p_ij = numerator / float(denominator)
+            self.transition_probabilities.append(p_ij)
+        next_city = numpy.random.choice(self.route, 1 , self.transition_probabilities )
+        return next_city
 
     def go_to(self, current_location , next_location):
         self.distance_travelled = self.distance_travelled + utils.count_distance( current_location, next_location)
-        # print ( current_location )
-        # print ( next_location )
-        # print ( self.not_visited_locations )
-        if current_location in self.not_visited_locations:
-            self.not_visited_locations.remove(current_location)
+        self.current_location.set_pheromone_to_city(next_location , 1 / utils.count_distance( current_location, next_location))
         self.current_location = next_location
 
     def return_cities(self):
+        # for city in self.route:
+            # print(city.index)
+
         return self.route
 
     def set_cities(self, cities):
         self.route = cities
+
+
+
+
+# city_to_go = city.City(0,0,0)
+#         while True:
+#             city_to_go = random.choice( self.route)
+#             if city_to_go.visited == False:
+#                 break
+#         return city_to_go
 
 
 
