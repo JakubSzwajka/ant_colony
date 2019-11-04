@@ -30,8 +30,6 @@ shortest_iterator = 1
 distances = []
 storage = []
 
-# Matrix = [[0 for x in range(w)] for y in range(h)] 
-
 for node in nodes:
     cities.append( city.City(numerator , node[0], node[1] ))
     numerator += 1
