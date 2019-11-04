@@ -13,7 +13,7 @@ class City( ):
         for city in cities:
             if city.index != self.index:
                 # print(city.index)
-                route = [city , 1 ]
+                route = [city , 1000 ] # 1000 is pheromone 
                 self.my_cities.append( route )
 
     def set_pheromone_to_city(self, city_to, phermonoe ):
@@ -27,7 +27,10 @@ class City( ):
             # print("------")
             if city[0] == city_to:
                 # print("znalazlem")
-                city[1] = phermonoe
+                city[1] += phermonoe
 
         # print("my cities" ,self.my_cities)
         # print("==========================")
+
+    def reset(self):
+        self.visited = False 
