@@ -1,5 +1,7 @@
 
 import math
+import networkx as nx
+import matplotlib.pyplot as plt
 
 
 def count_distance( point_a, point_b):
@@ -28,5 +30,3 @@ def pheromone_leak(cities):
         for cit in city.my_cities:
             cit[1] = cit[1] * 0.7 #pheromone leak 
 
-        
-        

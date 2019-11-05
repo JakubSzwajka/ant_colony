@@ -1,25 +1,22 @@
 import utils 
-# import numpy
 import city
 import route
 from ant import Ant
 from operator import itemgetter
+from string import ascii_uppercase
+import networkx as nx
+import matplotlib.pyplot as plt
+
 
 # punkt startowy ze wzgledu na numer indeksu 3 – B
+A = [1,2,'A']
+B = [3,1,'B']
+C = [3,6,'C']
+D = [6,7,'D']
+E = [5,2,'E']
 
-A = [1,2]
-B = [3,1]
-C = [3,6]
-D = [6,7]
-E = [5,2]
-
-# nodes = [[1,2],[3,1],[3,6],[6,7],[5,2]]
 nodes = [A,B,C,D,E]
 
-alpha = 1 
-beta = 1 
-tau = []
-eta = []
 ants = []
 cities = []
 numerator = 1
@@ -30,29 +27,29 @@ shortest_iterator = 1
 distances = []
 storage = []
 
-for node in nodes:
-    cities.append( city.City(numerator , node[0], node[1] ))
+for node in nodes:    
+    cities.append( city.City(node[2] , node[0], node[1] ))
     numerator += 1
 
 for city in cities: 
     city.add_cities( cities )
 
-#####################################################################
-
-for i in range(5000):
+for i in range(1000):
     ants.append( Ant( cities ))
+
+#####################################################################
 
 for ant in ants:
     ant.set_cities(cities)
-    # print( 'Obiekt mrówki: ',ant )
     ant.run()
     cities = ant.return_cities()
     mem , distance = ant.get_memory( )
-    print('memory: ',mem, '    distance: ', distance)
+    # print('memory: ',mem, '    distance: ', distance)
 
     utils.pheromone_leak(cities)
+
     for city in cities:
-        city.reset()
+        city.reset() # set the city as not visited yet
     
     storage.append(distance)
 
@@ -68,13 +65,27 @@ for item in storage:
     if setter not in distances:
         distances.append(setter)
 
-print( ' ===========  ')
-print( 'shortest distnce:', shortest_distance , 'times: ' , shortest_iterator)
-print( ' ===========  ')
+print( '===========')
+print( 'Shortest distnce:', shortest_distance , 'Times: ' , shortest_iterator)
+print( 'Shortest path: ' , mem )
+print( 'Begin nodes: ', nodes)
+print( '===========')
 
-
-sorted(distances , key=itemgetter(1))
-
+distances.sort()    
 for dist in distances:
     print(dist)
 
+
+############################################################################
+
+x = []
+y = []
+
+for node in mem:
+    for nod in nodes:
+        if nod[2] == node:
+            x.append(nod[0])
+            y.append(nod[1])
+
+plt.plot(x,y,'-or')
+plt.show()
